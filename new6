@@ -9,20 +9,27 @@
 ;增强中国IP段：不支持
 ;增强国外GFW：不支持
 
-;====================
-; 规则集
-;====================
+;==================================================
+; 规则集 (高优先级，从上往下匹配)
+;==================================================
 
+; 基础本地与直连放行
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list
 
+; 广告拦截与应用净化
 ruleset=🛑 全球拦截,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
 ruleset=🍃 应用净化,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list
 
-;====================
-; Nintendo 优先匹配（只走新加坡节点）
-;====================
-
+;--------------------------------------------------
+; 🎮 Nintendo 终极精准匹配（只走新加坡节点）
+;--------------------------------------------------
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.jp
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.co.jp
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.com.au
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.ch
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nso.nintendo.net
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,eshop.nintendo.net
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,accounts.nintendo.com
@@ -30,67 +37,63 @@ ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,accounts.nintendo.net
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,cdn.nintendo.net
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nncdn.nintendo.net
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,pokemon-home.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo-europe.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,miitomo.com
+ruleset=🎮 Nintendo,[]DOMAIN-KEYWORD,nintendo
 ruleset=🎮 Nintendo,https://raw.githubusercontent.com/scopeccsky/ClashCustomRule/master/Nintendo.list
 
-;====================
-; Telegram（优先级低于 Nintendo）
-;====================
-
+; 📲 Telegram 电报服务
 ruleset=📲 电报信息,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Telegram.list
 
-;====================
-; 其他规则
-;====================
+; 🌍 国外媒体分流 (移至 ProxyLite 前，防止流量被大范围代理规则拦截)
+ruleset=🌍 国外媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list
 
+; 专属公共服务分流
 ruleset=📢 谷歌FCM,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleFCM.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/SteamCN.list
 ruleset=Ⓜ️ 微软服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list
 ruleset=🍎 苹果服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list
 
-ruleset=🌍 国外媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list
+; 🚀 普通网页/基础境外流量兜底 (ProxyLite 移到这里)
 ruleset=🚀 节点选择,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyLite.list
 
+; 🇨🇳 国内流量直连
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list
 ;ruleset=🎯 全球直连,[]GEOIP,LAN
 ruleset=🎯 全球直连,[]GEOIP,CN
 
+; 🐟 漏网之鱼终极兜底
 ruleset=🐟 漏网之鱼,[]FINAL
 
-;====================
-; 策略组
-;====================
+;==================================================
+; 策略组配置
+;==================================================
 
-; 自动选择组排除香港节点
+; 🚀 节点选择组：默认提供自动测速与直连，排除香港节点
 custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]DIRECT`^(?!.*(香港|HK|Hong|💡|官网|流量|套餐|到期)).*
+
+; ♻️ 自动选择组：全网节点（除香港外）300秒自动测速一次
 custom_proxy_group=♻️ 自动选择`url-test`^(?!.*(香港|HK|Hong|💡|官网|流量|套餐|到期)).*`http://www.gstatic.com/generate_204`300,50
 
-; Nintendo 组，只使用新加坡节点，测速周期300秒
-custom_proxy_group=🎮 Nintendo`url-test`(新加|坡|SG|Singapore)`http://www.gstatic.com/generate_204`300,,50
+; 🎮 Nintendo 组：默认走新加坡低延迟测速组（联机极稳）。若遇游戏大更新，可在软件面板手动切到“🚀 节点选择”或“DIRECT直连”榨干全网带宽速度
+custom_proxy_group=🎮 Nintendo`select`[]🇸🇬 新加坡自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
+custom_proxy_group=🇸🇬 新加坡自动测速`url-test`(新加|坡|SG|Singapore)`http://www.gstatic.com/generate_204`300,50
 
-; Telegram 组（优先级低于 Nintendo）
+; 📲 其他特定代理与直连组
 custom_proxy_group=📲 电报信息`select`[]🚀 节点选择`[]🎯 全球直连`.*
-
 custom_proxy_group=🌍 国外媒体`select`[]🚀 节点选择`[]♻️ 自动选择`[]🎯 全球直连`.*
-
 custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 节点选择`.*
-
 custom_proxy_group=🍎 苹果服务`select`[]🚀 节点选择`[]🎯 全球直连`.*
-
 custom_proxy_group=📢 谷歌FCM`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`.*
-
 custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择
-
 custom_proxy_group=🛑 全球拦截`select`[]REJECT`[]DIRECT
-
 custom_proxy_group=🍃 应用净化`select`[]REJECT`[]DIRECT
-
 custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`.*
 
-;====================
-; 开关
-;====================
-
+;==================================================
+; 后端规则生成生成控制开关
+;==================================================
 enable_rule_generator=true
 overwrite_original_rules=true
