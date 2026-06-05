@@ -1,0 +1,106 @@
+[custom]
+;不要随意改变关键字，否则会导致出错
+;星链机场专用-ACL4SSR在线更新优化版
+
+;去广告：支持
+;自动测速：支持
+;微软分流：支持
+;苹果分流：支持
+;增强中国IP段：不支持
+;增强国外GFW：不支持
+
+;==================================================
+; 规则集 (高优先级，从上往下匹配)
+;==================================================
+
+; 基础本地与直连放行
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list
+
+; 广告拦截与应用净化
+ruleset=🛑 全球拦截,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
+ruleset=🍃 应用净化,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list
+
+;--------------------------------------------------
+; 🎮 Nintendo 精准匹配（针对你的机场大幅扩充低延迟区域）
+;--------------------------------------------------
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.jp
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.co.jp
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.com.au
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.ch
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nso.nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,eshop.nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,accounts.nintendo.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,accounts.nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,cdn.nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nncdn.nintendo.net
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,pokemon-home.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo-europe.com
+ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,miitomo.com
+ruleset=🎮 Nintendo,[]DOMAIN-KEYWORD,nintendo
+ruleset=🎮 Nintendo,https://raw.githubusercontent.com/scopeccsky/ClashCustomRule/master/Nintendo.list
+
+; 📲 Telegram 电报服务
+ruleset=📲 电报信息,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Telegram.list
+
+; 🌍 国外媒体分流 
+ruleset=🌍 国外媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list
+
+; 专属公共服务分流
+ruleset=📢 谷歌FCM,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleFCM.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/SteamCN.list
+ruleset=Ⓜ️ 微软服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list
+ruleset=🍎 苹果服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list
+
+; 🚀 普通网页/基础境外流量兜底 
+ruleset=🚀 节点选择,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyLite.list
+
+; 🇨🇳 国内流量直连
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list
+ruleset=🎯 全球直连,[]GEOIP,CN
+
+; 🐟 漏网之鱼终极兜底
+ruleset=🐟 漏网之鱼,[]FINAL
+
+;==================================================
+; 策略组配置
+;==================================================
+
+; 【通用排除正则说明】：
+; ^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+; 作用：完美过滤掉截图里看到的“低速-新加坡”、“龟速-德国”、“官网”、“套餐每日可用”、“请安装教程”等所有垃圾信息。
+; 同时允许了香港（HK）、日本（JP）、美国（US）等所有高速节点进入测速池。
+
+; 🚀 节点选择组：默认手动选择，包含全网所有纯净高速节点
+custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+
+; ♻️ 自动选择组：全网纯净高速节点自动测速（300秒，容差150ms维持稳定）
+custom_proxy_group=♻️ 自动选择`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*`http://www.gstatic.com/generate_204`300,150
+
+; 🎮 Nintendo 组：改用新设计的“游戏专线自动测速”组，同时保留其他备选
+custom_proxy_group=🎮 Nintendo`select`[]🎮 游戏专线自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
+
+; 🎮 游戏专线自动测速：针对任天堂联机优化。
+; 正则解释：只抓取包含“高速、香港、HK、日本、JP、美国、US”的有效节点，且排除低速/提示语。
+custom_proxy_group=🎮 游戏专线自动测速`url-test`^(?=.*(高速|香港|HK|日本|JP|美国|US))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*`http://www.gstatic.com/generate_204`300,100
+
+; 📲 其他特定代理与直连组
+custom_proxy_group=📲 电报信息`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=🌍 国外媒体`select`[]🚀 节点选择`[]♻️ 自动选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 节点选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=🍎 苹果服务`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=📢 谷歌FCM`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择
+custom_proxy_group=🛑 全球拦截`select`[]REJECT`[]DIRECT
+custom_proxy_group=🍃 应用净化`select`[]REJECT`[]DIRECT
+custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+
+;==================================================
+; 后端规则生成生成控制开关
+;==================================================
+enable_rule_generator=true
+overwrite_original_rules=true
