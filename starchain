@@ -1,6 +1,6 @@
 [custom]
 ;不要随意改变关键字，否则会导致出错
-;星链机场专用-ACL4SSR在线更新优化版
+;星链机场专用-ACL4SSR最高级策略精细化分流版（通用组已排除香港）
 
 ;去广告：支持
 ;自动测速：支持
@@ -22,7 +22,7 @@ ruleset=🛑 全球拦截,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/mast
 ruleset=🍃 应用净化,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list
 
 ;--------------------------------------------------
-; 🎮 Nintendo 精准匹配（针对你的机场大幅扩充低延迟区域）
+; 🎮 Nintendo 精准匹配
 ;--------------------------------------------------
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.com
 ruleset=🎮 Nintendo,[]DOMAIN-SUFFIX,nintendo.net
@@ -70,34 +70,39 @@ ruleset=🐟 漏网之鱼,[]FINAL
 ; 策略组配置
 ;==================================================
 
-; 【通用排除正则说明】：
-; ^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
-; 作用：完美过滤掉截图里看到的“低速-新加坡”、“龟速-德国”、“官网”、“套餐每日可用”、“请安装教程”等所有垃圾信息。
-; 同时允许了香港（HK）、日本（JP）、美国（US）等所有高速节点进入测速池。
+; 【通用排除正则升级】：加入了 香港|HK|Hong 过滤
+; ^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
 
-; 🚀 节点选择组：默认手动选择，包含全网所有纯净高速节点
-custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+; 🚀 节点选择组：默认手动选择，已排除香港及所有流媒体、垃圾通知节点
+custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
 
-; ♻️ 自动选择组：全网纯净高速节点自动测速（300秒，容差150ms维持稳定）
-custom_proxy_group=♻️ 自动选择`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*`http://www.gstatic.com/generate_204`300,150
+; ♻️ 自动选择组：全网纯净网页节点自动测速（已排除香港，300秒，容差150ms）
+custom_proxy_group=♻️ 自动选择`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*`http://www.gstatic.com/generate_204`300,150
 
-; 🎮 Nintendo 组：改用新设计的“游戏专线自动测速”组，同时保留其他备选
+; 🌍 国外媒体组：定向抓取流媒体、ChatGPT、Tiktok专属节点进行测速（允许包含香港的流媒体/高速节点）
+custom_proxy_group=🌍 国外媒体`select`[]🌍 流媒体自动测速`[]🚀 节点选择`[]DIRECT
+custom_proxy_group=🌍 流媒体自动测速`url-test`^(?=.*(流媒体|Tiktok|ChatGPT|TikTok))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6)).*`http://www.gstatic.com/generate_204`300,150
+
+; 🎮 Nintendo 组：只在游戏专线组里进行高速、香港、日本、美国的测速联机
 custom_proxy_group=🎮 Nintendo`select`[]🎮 游戏专线自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
 
-; 🎮 游戏专线自动测速：针对任天堂联机优化。
-; 正则解释：只抓取包含“高速、香港、HK、日本、JP、美国、US”的有效节点，且排除低速/提示语。
-custom_proxy_group=🎮 游戏专线自动测速`url-test`^(?=.*(高速|香港|HK|日本|JP|美国|US))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*`http://www.gstatic.com/generate_204`300,100
+; 🎮 游戏专线自动测速：包含高速、香港、HK、日本、JP、美国、US、堪萨斯、奥勒姆，且排除IPv6与低速
+custom_proxy_group=🎮 游戏专线自动测速`url-test`^(?=.*(高速|香港|HK|日本|JP|美国|US|堪萨斯|奥勒姆))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6)).*`http://www.gstatic.com/generate_204`300,100
 
-; 📲 其他特定代理与直连组
-custom_proxy_group=📲 电报信息`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
-custom_proxy_group=🌍 国外媒体`select`[]🚀 节点选择`[]♻️ 自动选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
-custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 节点选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
-custom_proxy_group=🍎 苹果服务`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
-custom_proxy_group=📢 谷歌FCM`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+; 📲 电报信息组：电报独立自动测速（排除香港，防止电报走香港容易因没有节点绕路导致卡顿）
+custom_proxy_group=📲 电报信息`select`[]📲 电报自动测速`[]🚀 节点选择`[]🎯 全球直连
+custom_proxy_group=📲 电报自动测速`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong)).*`http://www.gstatic.com/generate_204`300,150
+
+; Ⓜ️ 微软服务、🍎 苹果服务、📢 谷歌FCM（走纯净通用节点，避开流媒体与香港节点）
+custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 节点选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+custom_proxy_group=🍎 苹果服务`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|快速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+custom_proxy_group=📢 谷歌FCM`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+
+; 基础兜底
 custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择
 custom_proxy_group=🛑 全球拦截`select`[]REJECT`[]DIRECT
 custom_proxy_group=🍃 应用净化`select`[]REJECT`[]DIRECT
-custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE)).*
+custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong)).*
 
 ;==================================================
 ; 后端规则生成生成控制开关
