@@ -69,7 +69,7 @@ custom_proxy_group=🌍 流媒体自动测速`url-test`^(?=.*(流媒体|Tiktok|C
 
 ; 📢 谷歌服务组（含 Gemini 与 OpenRouter）：方案 A，锁定台湾、日本、新加坡，彻底排除伪美国限制节点
 custom_proxy_group=📢 谷歌服务`select`[]📢 谷歌自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
-custom_proxy_group=📢 谷歌自动测速`url-test`^(?=.*(台湾|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong|read|Read|奥勒姆)).*`http://www.gstatic.com/generate_204`300,150
+custom_proxy_group=📢 谷歌自动测速`url-test`^(?=.*(台湾|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|美国VS))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong|read|Read|奥勒姆)).*`http://www.gstatic.com/generate_204`300,150
 
 ; 🎮 Nintendo 组
 custom_proxy_group=🎮 Nintendo`select`[]🎮 游戏专线自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
