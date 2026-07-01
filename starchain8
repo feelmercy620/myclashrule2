@@ -1,0 +1,112 @@
+[custom]
+;不要随意改变关键字，否则会导致出错
+;星链机场 + 新机场多合一 - ACL4SSR最高级策略精细化分流版
+
+;去广告：支持
+;自动测速：支持
+;微软分流：支持
+;苹果分流：支持
+;增强中国IP段：不支持
+;增强国外GFW：不支持
+
+;==================================================
+; 规则集 (高优先级，从上往下匹配)
+;==================================================
+; 强制将 Switch 设备的所有流量直接送入游戏专线，无视任何规则限制
+ruleset=🎮 Nintendo,[]SRC-IP-CIDR,192.168.1.200/32
+
+; 基础本地与直连放行
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list
+
+; 广告拦截与应用净化
+ruleset=🛑 全球拦截,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
+ruleset=🍃 应用净化,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list
+
+;--------------------------------------------------
+; 🎮 Nintendo 精准匹配
+;--------------------------------------------------
+ruleset=🎮 Nintendo,https://raw.githubusercontent.com/scopeccsky/ClashCustomRule/master/Nintendo.list
+
+; 🤖 OpenRouter 独立分流规则 (由于使用自定义规则，先放置于谷歌前避免被通用谷歌规则吞掉)
+ruleset=🤖 OpenRouter,[]DOMAIN-KEYWORD,openrouter
+
+; 📢 谷歌家族与 Gemini 独立分流
+ruleset=📢 谷歌服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Google.list
+ruleset=📢 谷歌FCM,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleFCM.list
+
+; 📲 Telegram 电报服务
+ruleset=📲 电报信息,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Telegram.list
+
+; 🌍 国外媒体分流 
+ruleset=🌍 国外媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list
+
+; 专属公共服务分流
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/SteamCN.list
+ruleset=Ⓜ️ 微软服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list
+ruleset=🍎 苹果服务,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list
+
+; 🚀 普通网页/基础境外流量兜底 
+ruleset=🚀 节点选择,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyLite.list
+
+; 🇨🇳 国内流量直连
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list
+ruleset=🎯 全球直连,[]GEOIP,CN
+
+; 🐟 漏网之鱼终极兜底
+ruleset=🐟 漏网之鱼,[]FINAL
+
+;==================================================
+; 策略组配置
+;==================================================
+
+; 🚀 节点选择组：纯净网页节点
+custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+
+; ♻️ 自动选择组：全网网页节点测速
+custom_proxy_group=♻️ 自动选择`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*`https://www.google.com/generate_204`300,150
+
+; 🎮 Nintendo 组
+custom_proxy_group=🎮 Nintendo`select`[]🎮 游戏专线自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
+custom_proxy_group=🎮 游戏专线自动测速`url-test`^(?=.*(高速|香港|HK|日本|JP|美国|US|堪萨斯|奥勒姆))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6)).*`https://www.google.com/generate_204`300,100
+
+; 🤖 OpenRouter 分组：节点筛选条件与谷歌服务完全一致
+custom_proxy_group=🤖 OpenRouter`select`[]🤖 OpenRouter自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
+custom_proxy_group=🤖 OpenRouter自动测速`url-test`^(?=.*(台湾|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|美国VS|拉斯维加斯))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong|read|Read|奥勒姆)).*`https://www.google.com/generate_204`300,150
+
+; 📢 谷歌服务组（含 Gemini）：方案 A，锁定台湾、日本、新加坡，彻底排除伪美国限制节点
+custom_proxy_group=📢 谷歌服务`select`[]📢 谷歌自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT
+custom_proxy_group=📢 谷歌自动测速`url-test`^(?=.*(新加坡|SG|Singapore|美国VS|拉斯维加斯))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong|read|Read|奥勒姆)).*`https://www.google.com/generate_204`300,150
+
+; 🌍 国外媒体组
+custom_proxy_group=🌍 国外媒体`select`[]🌍 流媒体自动测速`[]🚀 节点选择`[]DIRECT
+custom_proxy_group=🌍 流媒体自动测速`url-test`^(?=.*(流媒体|Tiktok|ChatGPT|TikTok))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6)).*`https://www.google.com/generate_204`300,150
+
+; 📲 电报信息组
+custom_proxy_group=📲 电报信息`select`[]📲 电报自动测速`[]🚀 节点选择`[]🎯 全球直连
+custom_proxy_group=📲 电报自动测速`url-test`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong)).*`https://www.google.com/generate_204`300,150
+
+; Ⓜ️ 微软服务
+custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 节点选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+
+; 🍎 苹果服务
+custom_proxy_group=🍎 苹果服务`select`[]🚀 节点选择`[]🎯 全球直连`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+
+; 📢 谷歌FCM
+custom_proxy_group=📢 谷歌FCM`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|流媒体|Tiktok|ChatGPT|TikTok|香港|HK|Hong)).*
+
+; 基础安全分流/拦截放行组
+custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择
+custom_proxy_group=🛑 全球拦截`select`[]REJECT`[]DIRECT
+custom_proxy_group=🍃 应用净化`select`[]REJECT`[]DIRECT
+
+; 🐟 漏网之鱼组
+custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]🎯 全球直连`[]♻️ 自动选择`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong)).*
+
+;==================================================
+; 后端规则生成生成控制开关
+;==================================================
+enable_rule_generator=true
+overwrite_original_rules=true
