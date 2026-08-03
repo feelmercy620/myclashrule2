@@ -90,9 +90,9 @@ custom_proxy_group=🎮 游戏专线自动测速`url-test`^(?=.*(高速|日本|J
 
 ; 🤖 OpenAI / Codex
 ; 去掉普通节点池，避免误走 cfyes 新加坡节点
-custom_proxy_group=🤖 OpenAI`select`[]🤖 OpenAI自动测速`[]🚀 节点选择`[]DIRECT
+custom_proxy_group=🤖 OpenAI`select`[]📢 谷歌自动测速`[]🚀 节点选择`[]DIRECT
 
-custom_proxy_group=🤖 OpenAI自动测速`url-test`^(?=.*(台湾|TW|Taiwan|🇺🇸美国01))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong|read|Read|奥勒姆|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*`http://www.msftconnecttest.com/connecttest.txt`300,150
+;custom_proxy_group=🤖 OpenAI自动测速`url-test`^(?=.*(台湾|TW|Taiwan|🇺🇸美国01))(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|香港|HK|Hong|read|Read|奥勒姆|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*`http://www.msftconnecttest.com/connecttest.txt`300,150
 
 
 ; 🐱 GitHub
@@ -100,9 +100,9 @@ custom_proxy_group=🐱 GitHub`select`[]🚀 节点选择`[]♻️ 自动选择`
 
 
 ; 🤖 OpenRouter
-custom_proxy_group=🤖 OpenRouter`select`📢 谷歌自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|Tiktok|ChatGPT|TikTok|香港|HK|Hong|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*
+custom_proxy_group=🤖 OpenRouter`select`🤖 OpenRouter自动测速`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT`^(?!.*(💡|官网|流量|套餐|到期|教程|推荐|客户端|提示|低速|龟速|回国|China|LINE|IPV6|Ipv6|ipv6|Tiktok|ChatGPT|TikTok|香港|HK|Hong|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*
 
-;custom_proxy_group=🤖 OpenRouter自动测速`url-test`^(?=.*(台湾|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|美国VS|拉斯维加斯))(?!.*(香港|HK|Hong|read|Read|奥勒姆|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*`http://www.msftconnecttest.com/connecttest.txt`300,150
+custom_proxy_group=🤖 OpenRouter自动测速`url-test`^(?=.*(台湾|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|美国VS|拉斯维加斯|🇺🇸美国01))(?!.*(香港|HK|Hong|read|Read|奥勒姆|新加坡专线|新加坡高速0[678]|[Nn][Oo][Dd][Ee]|请重新导入)).*`http://www.msftconnecttest.com/connecttest.txt`300,150
 
 
 ; 📢 谷歌服务
